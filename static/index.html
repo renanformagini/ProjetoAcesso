@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>Atividades em Tempo Real</title>
+    <script src="https://cdn.pubnub.com/sdk/javascript/pubnub.8.2.7.js"></script>
+</head>
+
+<body>
+    <h1>Logs de Acesso em Tempo Real</h1>
+    <div id="messages"></div>
+
+    <script>
+        const showMessage = (msg) => {
+            var message = document.createElement('div');
+            message.innerText = msg;
+            document.getElementById('messages').appendChild(message);
+        };
+
+        let pubnub;
+
+        const setupPubNub = () => {
+            pubnub = new PubNub({
+                publishKey: "pub-c-eb54217e-3bfa-4f08-9990-4b9632e69e04",
+                subscribeKey: "sub-c-bd68d7b0-47d6-44c9-95db-a93d23712ab7",
+                userId: "User Id"
+            });
+            
+            const channel = pubnub.channel('meu_canal');
+            const subscription = channel.subscription();
+
+            subscription.onMessage = (messageEvent) => {
+                const logMessage = messageEvent.message.text || messageEvent.message; 
+                showMessage(logMessage);
+            };
+            
+            subscription.subscribe();
+        };
+
+        window.onload = setupPubNub;
+    </script>
+</body>
+
+</html>
